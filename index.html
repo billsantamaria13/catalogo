@@ -23,27 +23,22 @@
     <nav class="nav">
       <a href="#" class="brand" aria-label="CyberShop inicio">
         <img id="brandLogo" class="brand-logo" src="logo-cybershop.png" alt="CyberShop logo">
-        <span>
-          <strong>CyberShop</strong>
-          <small>Catálogo digital</small>
-        </span>
+        <span><strong>CyberShop</strong><small>Catálogo digital</small></span>
       </a>
-
       <a class="nav-cta" id="topWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
     </nav>
 
     <section class="hero-content">
       <img id="logosStrip" class="logos-strip" src="logos-cybershop-transparente.png" alt="Apps disponibles en CyberShop">
       <h1>Combos, apps y promociones de CyberShop</h1>
+      <p class="hero-note">Agrega 2 o más productos al carrito y se activa el precio especial de combo.</p>
     </section>
   </header>
 
   <main id="catalogo">
     <section class="controls-panel" aria-label="Buscar y filtrar productos">
       <input id="searchInput" type="search" placeholder="Buscar combo o app..." aria-label="Buscar productos" />
-      <select id="categorySelect" aria-label="Filtrar por categoría">
-        <option value="Todos">Todos</option>
-      </select>
+      <select id="categorySelect" aria-label="Filtrar por categoría"><option value="Todos">Todos</option></select>
     </section>
 
     <section class="products-section">
@@ -59,9 +54,31 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <p>© <span id="year"></span> CyberShop. Atención por WhatsApp.</p>
-  </footer>
+  <button class="cart-float" id="cartFloat" type="button" aria-label="Abrir carrito">
+    <span>🛒</span><strong id="cartCount">0</strong>
+  </button>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito temporal">
+    <div class="cart-header">
+      <div><strong>Tu combo</strong><small id="cartMode">Agrega productos para armar tu pedido</small></div>
+      <button id="closeCart" type="button" aria-label="Cerrar carrito">×</button>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-summary">
+      <div><span>Subtotal normal</span><strong id="cartSubtotal">$0</strong></div>
+      <div><span>Descuento combo</span><strong id="cartDiscount">$0</strong></div>
+      <div class="cart-total"><span>Total a pagar</span><strong id="cartTotal">$0</strong></div>
+    </div>
+
+    <a class="cart-whatsapp" id="cartWhatsapp" href="#" target="_blank" rel="noopener">Comprar combo por WhatsApp</a>
+    <button class="cart-clear" id="clearCart" type="button">Vaciar carrito</button>
+  </aside>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <footer class="footer"><p>© <span id="year"></span> CyberShop. Atención por WhatsApp.</p></footer>
 
   <script src="productos.js"></script>
   <script src="app.js"></script>

@@ -1,6 +1,7 @@
 const state = {
   search: "",
   category: "Todos",
+  cart: [],
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -10,7 +11,7 @@ function getConfig() {
     whatsappNumber: "",
     logoUrl: "logo-cybershop.png",
     logosStripUrl: "logos-cybershop-transparente.png",
-    mensajeBase: "Hola estoy interesado en",
+    mensajeBase: "Hola estoy interesado en comprar este combo:",
   };
 }
 
@@ -23,9 +24,11 @@ function formatCOP(value) {
   return `$${number.toLocaleString("es-CO")}`;
 }
 
-function mensajeProducto(producto) {
-  const config = getConfig();
-  return `${config.mensajeBase} ${producto.nombre} por valor de ${formatCOP(producto.precio)}.`;
+function normalizar(texto) {
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function whatsappUrl(mensaje) {
@@ -34,11 +37,28 @@ function whatsappUrl(mensaje) {
   return `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
 }
 
-function normalizar(texto) {
-  return String(texto || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+function isComboActivo() {
+  return state.cart.length > 1;
+}
+
+function precioAplicado(producto) {
+  return isComboActivo() && producto.precioCombo ? Number(producto.precioCombo) : Number(producto.precio);
+}
+
+function cartSubtotalNormal() {
+  return state.cart.reduce((total, item) => total + Number(item.precio || 0), 0);
+}
+
+function cartTotalAplicado() {
+  return state.cart.reduce((total, item) => total + precioAplicado(item), 0);
+}
+
+function cartDescuento() {
+  return Math.max(cartSubtotalNormal() - cartTotalAplicado(), 0);
+}
+
+function productoEnCarrito(producto) {
+  return state.cart.some((item) => item.nombre === producto.nombre);
 }
 
 function setBrandAssets() {
@@ -59,7 +79,6 @@ function setBrandAssets() {
 function buildCategories() {
   const select = $("#categorySelect");
   const productos = getProducts();
-
   if (!select) return;
 
   const categorias = [...new Set(productos.map((p) => p.categoria).filter(Boolean))]
@@ -97,19 +116,16 @@ function tarjetaProducto(producto) {
   const badges = [];
   if (producto.destacado) badges.push(`<span class="badge hot">Oferta</span>`);
   if (producto.stockLimitado) badges.push(`<span class="badge stock">Limitado</span>`);
+  if (producto.precioCombo && producto.precioCombo < producto.precio) {
+    badges.push(`<span class="badge combo">Combo</span>`);
+  }
 
   const logo = producto.logo || "./logo-cybershop.png";
-  const mensaje = mensajeProducto(producto);
+  const yaAgregado = productoEnCarrito(producto);
 
   card.innerHTML = `
     <div class="image-wrap">
-      <img
-        class="product-logo-img"
-        src="${logo}"
-        alt="${producto.nombre}"
-        loading="lazy"
-        onerror="this.onerror=null; this.src='./logo-cybershop.png';"
-      >
+      <img class="product-logo-img" src="${logo}" alt="${producto.nombre}" loading="lazy" onerror="this.onerror=null; this.src='./logo-cybershop.png';">
       <div class="badges">${badges.join("")}</div>
     </div>
 
@@ -121,12 +137,13 @@ function tarjetaProducto(producto) {
         <div>
           ${producto.precioAnterior ? `<small class="before">Antes ${formatCOP(producto.precioAnterior)}</small>` : ""}
           <strong>${formatCOP(producto.precio)}</strong>
+          ${producto.precioCombo && producto.precioCombo < producto.precio ? `<small class="combo-price">Combo: ${formatCOP(producto.precioCombo)}</small>` : ""}
         </div>
       </div>
 
-      <a class="buy-btn" href="${whatsappUrl(mensaje)}" target="_blank" rel="noopener">
-        Comprar
-      </a>
+      <button class="buy-btn add-cart-btn ${yaAgregado ? "is-added" : ""}" type="button" data-product="${producto.nombre}">
+        ${yaAgregado ? "Agregado" : "Agregar"}
+      </button>
     </div>
   `;
 
@@ -161,11 +178,147 @@ function renderProductos() {
 
   if (state.category !== "Todos" && state.category !== "Ofertas") {
     offersSection.style.display = "none";
+    bindProductButtons();
     return;
   }
 
   offersSection.style.display = ofertas.length ? "block" : "none";
   ofertas.forEach((producto) => offersGrid.appendChild(tarjetaProducto(producto)));
+  bindProductButtons();
+}
+
+function bindProductButtons() {
+  document.querySelectorAll(".add-cart-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const nombre = button.dataset.product;
+      const producto = getProducts().find((item) => item.nombre === nombre);
+      if (!producto) return;
+      toggleCartProduct(producto);
+    });
+  });
+}
+
+function toggleCartProduct(producto) {
+  const existe = productoEnCarrito(producto);
+  if (existe) {
+    state.cart = state.cart.filter((item) => item.nombre !== producto.nombre);
+  } else {
+    state.cart.push(producto);
+  }
+
+  renderProductos();
+  renderCart();
+  openCart();
+}
+
+function removeCartProduct(nombre) {
+  state.cart = state.cart.filter((item) => item.nombre !== nombre);
+  renderProductos();
+  renderCart();
+}
+
+function clearCart() {
+  state.cart = [];
+  renderProductos();
+  renderCart();
+}
+
+function buildWhatsappMessage() {
+  const config = getConfig();
+  const comboActivo = isComboActivo();
+  const subtotal = cartSubtotalNormal();
+  const descuento = cartDescuento();
+  const total = cartTotalAplicado();
+
+  if (!state.cart.length) {
+    return "Hola, quiero información sobre los combos y promociones de CyberShop.";
+  }
+
+  const lineas = state.cart.map((item) => {
+    const normal = Number(item.precio);
+    const aplicado = precioAplicado(item);
+    const ahorro = Math.max(normal - aplicado, 0);
+
+    if (comboActivo && ahorro > 0) {
+      return `- ${item.nombre}: ${formatCOP(aplicado)} (precio combo, antes ${formatCOP(normal)})`;
+    }
+
+    return `- ${item.nombre}: ${formatCOP(aplicado)}`;
+  });
+
+  return `${config.mensajeBase}
+
+${lineas.join("\n")}
+
+Subtotal normal: ${formatCOP(subtotal)}
+Descuento aplicado: ${formatCOP(descuento)}
+Total a pagar: ${formatCOP(total)}
+
+${comboActivo ? "Aplica precio especial por comprar 2 o más productos." : "Deseo confirmar disponibilidad."}`;
+}
+
+function renderCart() {
+  const cartCount = $("#cartCount");
+  const cartItems = $("#cartItems");
+  const cartSubtotal = $("#cartSubtotal");
+  const cartDiscount = $("#cartDiscount");
+  const cartTotal = $("#cartTotal");
+  const cartWhatsapp = $("#cartWhatsapp");
+  const cartMode = $("#cartMode");
+
+  if (cartCount) cartCount.textContent = state.cart.length;
+
+  if (cartMode) {
+    cartMode.textContent = isComboActivo()
+      ? "Precio combo activado por 2 o más productos"
+      : "Agrega otro producto para activar precio combo";
+  }
+
+  if (cartItems) {
+    if (!state.cart.length) {
+      cartItems.innerHTML = `<p class="cart-empty">Tu carrito está vacío.</p>`;
+    } else {
+      cartItems.innerHTML = state.cart.map((item) => {
+        const aplicado = precioAplicado(item);
+        const normal = Number(item.precio);
+        const tieneDescuento = isComboActivo() && aplicado < normal;
+
+        return `
+          <div class="cart-item">
+            <img src="${item.logo || "./logo-cybershop.png"}" alt="${item.nombre}" onerror="this.onerror=null; this.src='./logo-cybershop.png';">
+            <div>
+              <strong>${item.nombre}</strong>
+              <small>${tieneDescuento ? `Combo ${formatCOP(aplicado)} · Antes ${formatCOP(normal)}` : formatCOP(aplicado)}</small>
+            </div>
+            <button type="button" class="remove-cart-item" data-remove="${item.nombre}">×</button>
+          </div>
+        `;
+      }).join("");
+    }
+  }
+
+  if (cartSubtotal) cartSubtotal.textContent = formatCOP(cartSubtotalNormal());
+  if (cartDiscount) cartDiscount.textContent = `-${formatCOP(cartDescuento())}`;
+  if (cartTotal) cartTotal.textContent = formatCOP(cartTotalAplicado());
+
+  if (cartWhatsapp) {
+    cartWhatsapp.href = whatsappUrl(buildWhatsappMessage());
+    cartWhatsapp.classList.toggle("disabled", state.cart.length === 0);
+  }
+
+  document.querySelectorAll(".remove-cart-item").forEach((button) => {
+    button.addEventListener("click", () => removeCartProduct(button.dataset.remove));
+  });
+}
+
+function openCart() {
+  $("#cartDrawer")?.classList.add("is-open");
+  $("#cartOverlay")?.classList.add("is-open");
+}
+
+function closeCart() {
+  $("#cartDrawer")?.classList.remove("is-open");
+  $("#cartOverlay")?.classList.remove("is-open");
 }
 
 function bindEvents() {
@@ -185,6 +338,11 @@ function bindEvents() {
       renderProductos();
     });
   }
+
+  $("#cartFloat")?.addEventListener("click", openCart);
+  $("#closeCart")?.addEventListener("click", closeCart);
+  $("#cartOverlay")?.addEventListener("click", closeCart);
+  $("#clearCart")?.addEventListener("click", clearCart);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -192,4 +350,5 @@ document.addEventListener("DOMContentLoaded", () => {
   buildCategories();
   bindEvents();
   renderProductos();
+  renderCart();
 });

@@ -1,4 +1,4 @@
-# CyberShop Catálogo
+# CyberShop catálogo con carrito temporal
 
 Reemplaza en GitHub estos archivos:
 
@@ -6,39 +6,34 @@ Reemplaza en GitHub estos archivos:
 - app.js
 - productos.js
 - styles.css
+- README.md
+- CNAME
 
-No borres la carpeta logos ni tus imágenes.
+No borres:
 
-## Cambiar WhatsApp
+- /logos
+- logo-cybershop.png
+- logos-cybershop-transparente.png
 
-En productos.js:
+## Regla de descuento
+
+En `productos.js`, cada producto tiene:
+
+```js
+precio: 15000,
+precioCombo: 12000,
+```
+
+Si el carrito tiene 1 producto, usa `precio`.
+
+Si el carrito tiene 2 o más productos, usa `precioCombo`.
+
+## WhatsApp
+
+Cambia en `productos.js`:
 
 ```js
 whatsappNumber: "57TU_NUMERO_AQUI",
 ```
 
-## Logos usados
-
-Los productos buscan los logos en:
-
-```text
-/logos/Netflix.png
-/logos/Amazon.png
-/logos/Disney.png
-/logos/HBO.png
-/logos/IPTV.png
-/logos/Plex.png
-/logos/Crunchyr.png
-/logos/Paramount.png
-/logos/Vix.png
-/logos/Spotify.png
-/logos/Youtube.png
-/logos/Canva.png
-/logos/Capcut.png
-/logos/Office.png
-/logos/Xbox.png
-/logos/GPT.png
-/logos/Gemini.png
-```
-
-Si un logo no existe, la tarjeta muestra `logo-cybershop.png`.
+por tu número real.
