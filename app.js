@@ -104,7 +104,13 @@ function tarjetaProducto(producto) {
 
   card.innerHTML = `
     <div class="image-wrap">
-      <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
+  <img 
+        class="product-logo-img"
+        src="${producto.logo || producto.imagen}" 
+        alt="${producto.nombre}" 
+        loading="lazy"
+        onerror="this.src='${producto.imagen || "./logos/Netflix.png"}'"
+      >
       <div class="badges">${badges.join("")}</div>
     </div>
     <div class="product-body">
