@@ -3,9 +3,9 @@
 }
 
 :root {
-  --bg: #020817;
-  --panel: rgba(4, 14, 34, 0.72);
-  --line: rgba(54, 215, 255, 0.24);
+  --bg: #01030a;
+  --panel: rgba(3, 10, 24, 0.76);
+  --line: rgba(54, 215, 255, 0.16);
   --text: #ffffff;
   --muted: rgba(255, 255, 255, 0.68);
   --cyan: #26e6ff;
@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
-  background: var(--bg);
+  background: #01030a;
   overflow-x: hidden;
 }
 
@@ -34,69 +34,133 @@ body {
 }
 
 .page-bg {
+  overflow: hidden;
   background:
-    radial-gradient(circle at 12% 24%, rgba(0, 136, 255, 0.55), transparent 24%),
-    radial-gradient(circle at 85% 22%, rgba(0, 236, 255, 0.32), transparent 28%),
-    radial-gradient(circle at 55% 78%, rgba(112, 38, 255, 0.25), transparent 30%),
-    linear-gradient(135deg, #030617 0%, #020817 48%, #001c2e 100%);
+    radial-gradient(circle at 18% 18%, rgba(0, 94, 255, 0.12), transparent 18%),
+    radial-gradient(circle at 90% 18%, rgba(0, 230, 255, 0.10), transparent 22%),
+    radial-gradient(circle at 50% 90%, rgba(85, 55, 255, 0.10), transparent 26%),
+    linear-gradient(180deg, #00020a 0%, #010716 45%, #01040d 100%);
+}
+
+.page-bg::before,
+.page-bg::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.page-bg::before {
+  background:
+    radial-gradient(circle at 22% 30%, rgba(0, 155, 255, 0.10), transparent 16%),
+    radial-gradient(circle at 78% 18%, rgba(0, 255, 255, 0.08), transparent 20%),
+    radial-gradient(circle at 62% 78%, rgba(96, 62, 255, 0.08), transparent 22%);
+  filter: blur(70px);
+  animation: auroraDriftA 20s ease-in-out infinite alternate;
+  opacity: 0.8;
+}
+
+.page-bg::after {
+  background:
+    linear-gradient(120deg, transparent 20%, rgba(0, 217, 255, 0.025) 44%, transparent 66%),
+    linear-gradient(300deg, transparent 24%, rgba(45, 98, 255, 0.03) 54%, transparent 78%);
+  filter: blur(28px);
+  animation: auroraDriftB 26s ease-in-out infinite alternate;
+  opacity: 0.65;
 }
 
 .orb {
-  width: 42vw;
-  height: 42vw;
+  width: 34vw;
+  height: 34vw;
   border-radius: 999px;
-  filter: blur(46px);
-  opacity: 0.35;
-  animation: floatOrb 12s ease-in-out infinite alternate;
+  filter: blur(80px);
+  opacity: 0.16;
 }
 
 .orb-one {
-  top: 5%;
-  left: -10%;
-  background: #0077ff;
+  top: 2%;
+  left: -16%;
+  background: #005dff;
+  animation: floatOrbA 18s ease-in-out infinite alternate;
 }
 
 .orb-two {
-  top: 12%;
+  top: 10%;
   right: -14%;
-  background: #00f0ff;
-  animation-delay: 2s;
+  background: #00e7ff;
+  animation: floatOrbB 21s ease-in-out infinite alternate;
 }
 
 .orb-three {
-  bottom: -18%;
-  left: 30%;
-  background: #7139ff;
-  animation-delay: 4s;
+  bottom: -22%;
+  left: 32%;
+  background: #5f3fff;
+  animation: floatOrbC 24s ease-in-out infinite alternate;
 }
 
 .grid-lines {
   background-image:
-    linear-gradient(rgba(0, 217, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 217, 255, 0.08) 1px, transparent 1px);
-  background-size: 48px 48px;
-  transform: perspective(600px) rotateX(62deg) translateY(28%);
+    linear-gradient(rgba(0, 217, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.045) 1px, transparent 1px);
+  background-size: 52px 52px;
+  transform: perspective(700px) rotateX(67deg) translateY(31%);
   transform-origin: bottom;
-  opacity: 0.5;
+  opacity: 0.26;
+  animation: gridShift 16s linear infinite alternate;
 }
 
 .stars {
   background-image:
-    radial-gradient(circle, rgba(96, 235, 255, 0.75) 1px, transparent 2px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.55) 1px, transparent 2px);
-  background-size: 120px 120px, 180px 180px;
-  animation: driftStars 18s linear infinite;
-  opacity: 0.55;
+    radial-gradient(circle, rgba(86, 234, 255, 0.55) 1px, transparent 2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.36) 1px, transparent 2px),
+    radial-gradient(circle, rgba(72, 143, 255, 0.45) 1px, transparent 2px);
+  background-size: 150px 150px, 210px 210px, 260px 260px;
+  animation: driftStars 22s linear infinite, twinkle 5s ease-in-out infinite alternate;
+  opacity: 0.42;
 }
 
-@keyframes floatOrb {
+@keyframes auroraDriftA {
+  0%   { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); }
+  50%  { transform: translate3d(2%, 3%, 0) rotate(4deg) scale(1.05); }
+  100% { transform: translate3d(5%, -3%, 0) rotate(-3deg) scale(1.1); }
+}
+
+@keyframes auroraDriftB {
+  0%   { transform: translate3d(2%, 0%, 0) rotate(0deg) scale(1); }
+  50%  { transform: translate3d(-3%, 4%, 0) rotate(-5deg) scale(1.04); }
+  100% { transform: translate3d(4%, -4%, 0) rotate(6deg) scale(1.08); }
+}
+
+@keyframes floatOrbA {
   from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(8%, -4%, 0) scale(1.18); }
+  to   { transform: translate3d(7%, 5%, 0) scale(1.12); }
+}
+
+@keyframes floatOrbB {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-9%, 5%, 0) scale(1.13); }
+}
+
+@keyframes floatOrbC {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(6%, -8%, 0) scale(1.14); }
+}
+
+@keyframes gridShift {
+  0%   { transform: perspective(700px) rotateX(67deg) translateY(31%) translateX(0); }
+  50%  { transform: perspective(700px) rotateX(67deg) translateY(30%) translateX(-1.2%); }
+  100% { transform: perspective(700px) rotateX(67deg) translateY(32%) translateX(1.2%); }
 }
 
 @keyframes driftStars {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 240px 120px, -180px 220px; }
+  from { background-position: 0 0, 0 0, 0 0; }
+  to   { background-position: 220px 120px, -170px 230px, 120px -180px; }
+}
+
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to   { opacity: 0.48; }
 }
 
 .hero {
@@ -147,8 +211,8 @@ body {
   padding: 11px 22px;
   border-radius: 999px;
   border: 1px solid rgba(54, 215, 255, 0.45);
-  background: rgba(0, 165, 220, 0.22);
-  box-shadow: 0 0 22px rgba(0, 217, 255, 0.18);
+  background: rgba(0, 165, 220, 0.18);
+  box-shadow: 0 0 22px rgba(0, 217, 255, 0.12);
 }
 
 .hero-content {
@@ -162,7 +226,7 @@ body {
   object-fit: contain;
   display: block;
   margin: 0 auto 20px;
-  filter: drop-shadow(0 0 14px rgba(0, 217, 255, 0.28));
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.22));
 }
 
 .hero-content h1 {
@@ -171,7 +235,7 @@ body {
   font-size: clamp(2rem, 5vw, 4rem);
   line-height: 0.98;
   letter-spacing: -0.06em;
-  text-shadow: 0 0 22px rgba(0, 204, 255, 0.38);
+  text-shadow: 0 0 22px rgba(0, 204, 255, 0.3);
 }
 
 #catalogo {
@@ -186,17 +250,17 @@ body {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 24px;
-  background: rgba(3, 14, 32, 0.58);
+  background: rgba(2, 10, 24, 0.72);
   backdrop-filter: blur(18px);
-  box-shadow: 0 0 32px rgba(0, 217, 255, 0.11);
+  box-shadow: 0 0 32px rgba(0, 217, 255, 0.06);
   margin-bottom: 22px;
 }
 
 .controls-panel input,
 .controls-panel select {
   width: 100%;
-  border: 1px solid rgba(54, 215, 255, 0.25);
-  background: rgba(0, 4, 18, 0.82);
+  border: 1px solid rgba(54, 215, 255, 0.22);
+  background: rgba(0, 4, 18, 0.9);
   color: white;
   border-radius: 16px;
   padding: 15px 16px;
@@ -214,22 +278,21 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-  border: 1px solid rgba(54, 215, 255, 0.25);
-  background:
-    linear-gradient(180deg, rgba(6, 19, 45, 0.94), rgba(3, 10, 28, 0.96));
+  border: 1px solid rgba(54, 215, 255, 0.22);
+  background: linear-gradient(180deg, rgba(4, 14, 35, 0.95), rgba(2, 8, 23, 0.98));
   min-height: 205px;
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.32),
-    inset 0 0 24px rgba(0, 217, 255, 0.04);
+    0 12px 30px rgba(0, 0, 0, 0.34),
+    inset 0 0 24px rgba(0, 217, 255, 0.035);
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .product-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(38, 230, 255, 0.62);
+  border-color: rgba(38, 230, 255, 0.55);
   box-shadow:
-    0 16px 38px rgba(0, 0, 0, 0.36),
-    0 0 28px rgba(0, 217, 255, 0.17);
+    0 16px 38px rgba(0, 0, 0, 0.38),
+    0 0 24px rgba(0, 217, 255, 0.12);
 }
 
 .image-wrap {
@@ -239,8 +302,8 @@ body {
   padding: 12px 12px 2px;
   position: relative;
   background:
-    radial-gradient(circle at center, rgba(0, 217, 255, 0.16), transparent 62%),
-    linear-gradient(180deg, rgba(0, 22, 54, 0.72), rgba(0, 4, 18, 0));
+    radial-gradient(circle at center, rgba(0, 217, 255, 0.10), transparent 62%),
+    linear-gradient(180deg, rgba(0, 22, 54, 0.48), rgba(0, 4, 18, 0));
 }
 
 .product-logo-img {
@@ -248,7 +311,7 @@ body {
   height: 60px;
   object-fit: contain;
   border-radius: 15px;
-  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.4));
+  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.28));
 }
 
 .badges {
@@ -337,7 +400,7 @@ body {
   text-decoration: none;
   font-weight: 900;
   background: linear-gradient(135deg, #11e87a, #09d26f);
-  box-shadow: 0 0 18px rgba(17, 232, 122, 0.22);
+  box-shadow: 0 0 18px rgba(17, 232, 122, 0.18);
   transition: transform 0.16s ease, filter 0.16s ease;
 }
 
@@ -354,8 +417,8 @@ body {
   margin: 0 0 16px;
   padding: 18px 20px;
   border-radius: 22px;
-  border: 1px solid rgba(38, 230, 255, 0.22);
-  background: rgba(3, 14, 32, 0.5);
+  border: 1px solid rgba(38, 230, 255, 0.18);
+  background: rgba(2, 10, 24, 0.58);
   backdrop-filter: blur(14px);
 }
 
