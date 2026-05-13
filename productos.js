@@ -7,9 +7,9 @@
   4) Las imágenes pueden estar en GitHub usando el enlace RAW o en cualquier URL pública.
 */
 
-const LOGO_BASE_URL = "./logos/";
+window.LOGO_BASE_URL = "./logos/";
 
-const appLogos = [
+window.appLogos = [
   { nombre: "Amazon Prime", archivo: "Amazon.png" },
   { nombre: "Canva", archivo: "Canva.png" },
   { nombre: "CapCut", archivo: "Capcut.png" },
