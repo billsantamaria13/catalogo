@@ -9,6 +9,25 @@ const logosStrip = document.querySelector("#logosStrip");
 
 let categoriaActiva = "Todos";
 
+function renderAppLogos() {
+  const container = document.getElementById("appsLogos");
+  if (!container || typeof appLogos === "undefined") return;
+
+  container.innerHTML = appLogos
+    .map((logo) => {
+      const src = `${LOGO_BASE_URL}${logo.archivo}`;
+
+      return `
+        <div class="app-logo-card">
+          <img src="${src}" alt="${logo.nombre}" loading="lazy">
+        </div>
+      `;
+    })
+    .join("");
+}
+
+renderAppLogos();
+
 function formatCOP(valor) {
   return `$${valor}`;
 }
