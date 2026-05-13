@@ -7,7 +7,7 @@
   4) Las imágenes pueden estar en GitHub usando el enlace RAW o en cualquier URL pública.
 */
 
-const LOGO_BASE_URL = "https://raw.githubusercontent.com/billsantamaria13/catalogo/main/logos/";
+const LOGO_BASE_URL = "./logos/";
 
 const appLogos = [
   { nombre: "Amazon Prime", archivo: "Amazon.png" },
@@ -15,7 +15,7 @@ const appLogos = [
   { nombre: "CapCut", archivo: "Capcut.png" },
   { nombre: "Crunchyroll", archivo: "Crunchyr.png" },
   { nombre: "Disney+", archivo: "Disney.png" },
-  { nombre: "Gemini", archivo: "GEmini.png" },
+  { nombre: "Gemini", archivo: "Gemini.png" },
   { nombre: "ChatGPT", archivo: "GPT.png" },
   { nombre: "HBO Max", archivo: "HBO.png" },
   { nombre: "IPTV", archivo: "IPTV.png" },
