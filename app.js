@@ -11,6 +11,40 @@ let categoriaActiva = "Todos";
 
 function renderAppLogos() {
   const container = document.getElementById("appsLogos");
+
+  if (!container) {
+    console.warn("No existe el contenedor #appsLogos en index.html");
+    return;
+  }
+
+  const logos = window.appLogos || [];
+  const baseUrl = window.LOGO_BASE_URL || "./logos/";
+
+  if (!logos.length) {
+    console.warn("No hay logos cargados en window.appLogos");
+    return;
+  }
+
+  container.innerHTML = logos
+    .map((logo) => {
+      const src = `${baseUrl}${logo.archivo}`;
+
+      return `
+        <div class="app-logo-card">
+          <img 
+            src="${src}" 
+            alt="${logo.nombre}" 
+            loading="lazy"
+            onerror="this.parentElement.style.display='none'; console.warn('No carga logo:', this.src);"
+          >
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderAppLogos() {
+  const container = document.getElementById("appsLogos");
   if (!container || typeof appLogos === "undefined") return;
 
   container.innerHTML = appLogos
@@ -141,5 +175,13 @@ function iniciar() {
     pintarProductos();
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderAppLogos();
+
+  // Aquí deja tus otras funciones si ya existen:
+  // renderProducts();
+  // renderCategories();
+});
 
 iniciar();
