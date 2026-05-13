@@ -1,22 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CyberShop | Combos y Ofertas</title>
-  <meta name="description" content="Catálogo de combos, apps y promociones CyberShop. Compra por WhatsApp." />
+  <title>CyberShop | Catálogo digital</title>
+  <meta name="description" content="Combos, apps y promociones de CyberShop." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page-bg">
+  <div class="page-bg" aria-hidden="true">
     <span class="orb orb-one"></span>
     <span class="orb orb-two"></span>
     <span class="orb orb-three"></span>
-    <span class="neon-wave wave-one"></span>
-    <span class="neon-wave wave-two"></span>
     <span class="grid-lines"></span>
     <span class="stars"></span>
   </div>
@@ -24,19 +22,22 @@
   <header class="hero">
     <nav class="nav">
       <a href="#" class="brand" aria-label="CyberShop inicio">
-        <img id="logosStrip" class="logos-strip" src="logos-cybershop-transparente.png" alt="Apps disponibles en CyberShop">
+        <img id="brandLogo" class="brand-logo" src="logo-cybershop.png" alt="CyberShop logo">
         <span>
           <strong>CyberShop</strong>
           <small>Catálogo digital</small>
         </span>
       </a>
-      <a class="nav-cta" id="topWhatsapp" target="_blank" rel="noopener">WhatsApp</a>
+
+      <a class="nav-cta" id="topWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
     </nav>
 
-  <section class="hero-content">
-    <img id="logosStrip" class="logos-strip" src="logos-cybershop-transparente.png" alt="Apps disponibles en CyberShop">
-    <h1>Combos, apps y promociones de CyberShop</h1>
-  </section>
+    <section class="hero-content">
+      <!-- Esta imagen grande queda arriba como te gustaba. Puedes reemplazarla en GitHub por otra con el mismo nombre. -->
+      <img id="logosStrip" class="logos-strip" src="logos-cybershop-transparente.png" alt="Apps disponibles en CyberShop">
+
+      <h1>Combos, apps y promociones de CyberShop</h1>
+    </section>
   </header>
 
   <main id="catalogo">
@@ -47,18 +48,21 @@
       </select>
     </section>
 
-    <section class="grid" id="productsGrid" aria-live="polite"></section>
-    <p class="empty" id="emptyState">No encontramos productos con ese filtro.</p>
+    <section class="products-section">
+      <div id="productsGrid" class="products-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="offers-section" id="offersSection">
+      <div class="section-heading">
+        <span>🔥 Ofertas especiales</span>
+        <p>Promociones destacadas por tiempo limitado.</p>
+      </div>
+      <div id="offersGrid" class="products-grid offers-grid" aria-live="polite"></div>
+    </section>
   </main>
 
-  <a class="floating-whatsapp" id="floatingWhatsapp" target="_blank" rel="noopener" aria-label="Comprar por WhatsApp">
-    <span>💬</span>
-    WhatsApp
-  </a>
-
-  <footer>
-    <strong>CyberShop</strong>
-    <span>Compra rápida por WhatsApp</span>
+  <footer class="footer">
+    <p>© <span id="year"></span> CyberShop. Atención por WhatsApp.</p>
   </footer>
 
   <script src="productos.js"></script>

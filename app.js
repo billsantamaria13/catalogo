@@ -1,97 +1,76 @@
-const grid = document.querySelector("#productsGrid");
-const searchInput = document.querySelector("#searchInput");
-const categorySelect = document.querySelector("#categorySelect");
-const emptyState = document.querySelector("#emptyState");
-const topWhatsapp = document.querySelector("#topWhatsapp");
-const floatingWhatsapp = document.querySelector("#floatingWhatsapp");
-const brandLogo = document.querySelector("#brandLogo");
-const logosStrip = document.querySelector("#logosStrip");
+const state = {
+  search: "",
+  category: "Todos",
+};
 
-let categoriaActiva = "Todos";
+const $ = (selector) => document.querySelector(selector);
 
-function renderAppLogos() {
-  const container = document.getElementById("appsLogos");
+const formatCOP = (value) => {
+  const number = Number(value || 0);
+  return `$${number.toLocaleString("es-CO")}`;
+};
 
-  if (!container) {
-    console.warn("No existe el contenedor #appsLogos en index.html");
-    return;
-  }
-
-  const logos = window.appLogos || [];
-  const baseUrl = window.LOGO_BASE_URL || "./logos/";
-
-  if (!logos.length) {
-    console.warn("No hay logos cargados en window.appLogos");
-    return;
-  }
-
-  container.innerHTML = logos
-    .map((logo) => {
-      const src = `${baseUrl}${logo.archivo}`;
-
-      return `
-        <div class="app-logo-card">
-          <img 
-            src="${src}" 
-            alt="${logo.nombre}" 
-            loading="lazy"
-            onerror="this.parentElement.style.display='none'; console.warn('No carga logo:', this.src);"
-          >
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function renderAppLogos() {
-  const container = document.getElementById("appsLogos");
-  if (!container || typeof appLogos === "undefined") return;
-
-  container.innerHTML = appLogos
-    .map((logo) => {
-      const src = `${LOGO_BASE_URL}${logo.archivo}`;
-
-      return `
-        <div class="app-logo-card">
-          <img src="${src}" alt="${logo.nombre}" loading="lazy">
-        </div>
-      `;
-    })
-    .join("");
-}
-
-renderAppLogos();
-
-function formatCOP(valor) {
-  return `$${valor}`;
+function mensajeProducto(producto) {
+  return `${CONFIG.mensajeBase} ${producto.nombre} por valor de ${formatCOP(producto.precio)}.`;
 }
 
 function whatsappUrl(mensaje) {
-  return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
+  const phone = CONFIG.whatsappNumber || "";
+  return `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
 }
 
-function mensajeProducto(producto) {
-  return `Hola estoy interesado en ${producto.nombre} por valor de ${formatCOP(producto.precio)}.`;
+function normalizar(texto) {
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
-function crearCategorias() {
-  const categorias = ["Todos", ...new Set(PRODUCTOS.map((p) => p.categoria))];
+function setBrandAssets() {
+  const logo = $("#brandLogo");
+  const strip = $("#logosStrip");
+  const topWhatsapp = $("#topWhatsapp");
 
-  categorias.forEach((categoria) => {
-    if (categoria !== "Todos") {
-      const option = document.createElement("option");
-      option.value = categoria;
-      option.textContent = categoria;
-      categorySelect.appendChild(option);
-    }
+  if (logo && CONFIG.logoUrl) logo.src = CONFIG.logoUrl;
+  if (strip && CONFIG.logosStripUrl) strip.src = CONFIG.logosStripUrl;
+  if (topWhatsapp) {
+    topWhatsapp.href = whatsappUrl("Hola, quiero información sobre los combos y promociones de CyberShop.");
+  }
+
+  const year = $("#year");
+  if (year) year.textContent = new Date().getFullYear();
+}
+
+function buildCategories() {
+  const select = $("#categorySelect");
+  if (!select) return;
+
+  const categorias = [...new Set(productos.map((p) => p.categoria).filter(Boolean))]
+    .filter((cat) => cat !== "Ofertas")
+    .sort((a, b) => a.localeCompare(b, "es"));
+
+  select.innerHTML = `<option value="Todos">Todos</option>` + categorias
+    .map((cat) => `<option value="${cat}">${cat}</option>`)
+    .join("");
+}
+
+function filtrarProductos(lista, incluirOfertas = false) {
+  const query = normalizar(state.search);
+
+  return lista.filter((producto) => {
+    const esOferta = producto.categoria === "Ofertas";
+    if (incluirOfertas !== esOferta) return false;
+
+    const coincideCategoria =
+      state.category === "Todos" ||
+      producto.categoria === state.category ||
+      (state.category === "Ofertas" && esOferta);
+
+    const texto = normalizar(`${producto.nombre} ${producto.categoria}`);
+    const coincideBusqueda = !query || texto.includes(query);
+
+    return coincideCategoria && coincideBusqueda;
   });
-}
-
-function productoCoincide(producto) {
-  const busqueda = searchInput.value.trim().toLowerCase();
-  const coincideCategoria = categoriaActiva === "Todos" || producto.categoria === categoriaActiva;
-  const texto = `${producto.nombre} ${producto.categoria}`.toLowerCase();
-  return coincideCategoria && texto.includes(busqueda);
 }
 
 function tarjetaProducto(producto) {
@@ -100,30 +79,35 @@ function tarjetaProducto(producto) {
 
   const badges = [];
   if (producto.destacado) badges.push(`<span class="badge hot">Oferta</span>`);
-  if (producto.stockLimitado) badges.push(`<span class="badge stock">Stock limitado</span>`);
+  if (producto.stockLimitado) badges.push(`<span class="badge stock">Limitado</span>`);
+
+  const logo = producto.logo || "./logos/Netflix.png";
+  const mensaje = mensajeProducto(producto);
 
   card.innerHTML = `
     <div class="image-wrap">
-  <img 
+      <img 
         class="product-logo-img"
-        src="${producto.logo || producto.imagen}" 
+        src="${logo}" 
         alt="${producto.nombre}" 
         loading="lazy"
-        onerror="this.src='${producto.imagen || "./logos/Netflix.png"}'"
+        onerror="this.onerror=null; this.src='./logo-cybershop.png';"
       >
       <div class="badges">${badges.join("")}</div>
     </div>
+
     <div class="product-body">
       <span class="category">${producto.categoria}</span>
       <h3>${producto.nombre}</h3>
+
       <div class="price-row">
         <div>
           ${producto.precioAnterior ? `<small class="before">Antes ${formatCOP(producto.precioAnterior)}</small>` : ""}
           <strong>${formatCOP(producto.precio)}</strong>
         </div>
-        <span class="discount">Oferta</span>
       </div>
-      <a class="buy-btn" href="${whatsappUrl(mensajeProducto(producto))}" target="_blank" rel="noopener">
+
+      <a class="buy-btn" href="${whatsappUrl(mensaje)}" target="_blank" rel="noopener">
         Comprar
       </a>
     </div>
@@ -132,62 +116,56 @@ function tarjetaProducto(producto) {
   return card;
 }
 
-function tituloSeccion(titulo, subtitulo = "") {
-  const bloque = document.createElement("div");
-  bloque.className = "section-title";
-  bloque.innerHTML = `
-    <h2>${titulo}</h2>
-    ${subtitulo ? `<p>${subtitulo}</p>` : ""}
-  `;
-  return bloque;
-}
+function renderProductos() {
+  const grid = $("#productsGrid");
+  const offersGrid = $("#offersGrid");
+  const offersSection = $("#offersSection");
 
-function pintarProductos() {
+  if (!grid || !offersGrid || !offersSection) return;
+
+  const normales = filtrarProductos(productos, false);
+  const ofertas = filtrarProductos(productos, true);
+
   grid.innerHTML = "";
-  const productosFiltrados = PRODUCTOS.filter(productoCoincide);
-  const productosNormales = productosFiltrados.filter((producto) => producto.categoria !== "Ofertas");
-  const productosOferta = productosFiltrados.filter((producto) => producto.categoria === "Ofertas");
+  offersGrid.innerHTML = "";
 
-  productosNormales.forEach((producto) => grid.appendChild(tarjetaProducto(producto)));
-
-  if (productosOferta.length) {
-    grid.appendChild(tituloSeccion("🔥 Ofertas especiales", "Promociones destacadas por tiempo limitado."));
-    productosOferta.forEach((producto) => grid.appendChild(tarjetaProducto(producto)));
+  if (normales.length === 0) {
+    grid.innerHTML = `<p class="empty">No encontramos productos con ese filtro.</p>`;
+  } else {
+    normales.forEach((producto) => grid.appendChild(tarjetaProducto(producto)));
   }
 
-  emptyState.style.display = productosFiltrados.length ? "none" : "block";
+  if (state.category !== "Todos" && state.category !== "Ofertas") {
+    offersSection.style.display = "none";
+    return;
+  }
+
+  offersSection.style.display = ofertas.length ? "block" : "none";
+  ofertas.forEach((producto) => offersGrid.appendChild(tarjetaProducto(producto)));
 }
 
-function iniciar() {
-  document.title = `${CONFIG.tienda} | Ofertas`;
-  brandLogo.src = CONFIG.logoUrl || "logo-cybershop.png";
-  brandLogo.onerror = () => { brandLogo.style.display = "none"; };
+function bindEvents() {
+  const searchInput = $("#searchInput");
+  const categorySelect = $("#categorySelect");
 
-  if (logosStrip) {
-    logosStrip.src = CONFIG.logosStripUrl || "logos-cybershop-transparente.png";
-    logosStrip.onerror = () => { logosStrip.style.display = "none"; };
+  if (searchInput) {
+    searchInput.addEventListener("input", (event) => {
+      state.search = event.target.value;
+      renderProductos();
+    });
   }
 
-  const ayudaUrl = whatsappUrl(CONFIG.mensajeAyuda);
-  topWhatsapp.href = ayudaUrl;
-  floatingWhatsapp.href = ayudaUrl;
-
-  crearCategorias();
-  pintarProductos();
-
-  searchInput.addEventListener("input", pintarProductos);
-  categorySelect.addEventListener("change", (event) => {
-    categoriaActiva = event.target.value;
-    pintarProductos();
-  });
+  if (categorySelect) {
+    categorySelect.addEventListener("change", (event) => {
+      state.category = event.target.value;
+      renderProductos();
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderAppLogos();
-
-  // Aquí deja tus otras funciones si ya existen:
-  // renderProducts();
-  // renderCategories();
+  setBrandAssets();
+  buildCategories();
+  bindEvents();
+  renderProductos();
 });
-
-iniciar();
