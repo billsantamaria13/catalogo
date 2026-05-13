@@ -5,14 +5,11 @@
 :root {
   --bg: #020817;
   --panel: rgba(4, 14, 34, 0.72);
-  --panel-strong: rgba(5, 20, 48, 0.92);
   --line: rgba(54, 215, 255, 0.24);
   --text: #ffffff;
   --muted: rgba(255, 255, 255, 0.68);
   --cyan: #26e6ff;
-  --blue: #168bff;
   --green: #12e67b;
-  --purple: #7b5cff;
 }
 
 html {
@@ -205,12 +202,6 @@ body {
   padding: 15px 16px;
   outline: none;
   font-size: 0.96rem;
-}
-
-.controls-panel input:focus,
-.controls-panel select:focus {
-  border-color: rgba(38, 230, 255, 0.8);
-  box-shadow: 0 0 0 4px rgba(38, 230, 255, 0.09);
 }
 
 .products-grid {

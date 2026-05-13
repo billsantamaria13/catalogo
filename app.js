@@ -5,17 +5,32 @@ const state = {
 
 const $ = (selector) => document.querySelector(selector);
 
-const formatCOP = (value) => {
+function getConfig() {
+  return window.CONFIG || {
+    whatsappNumber: "",
+    logoUrl: "logo-cybershop.png",
+    logosStripUrl: "logos-cybershop-transparente.png",
+    mensajeBase: "Hola estoy interesado en",
+  };
+}
+
+function getProducts() {
+  return Array.isArray(window.productos) ? window.productos : [];
+}
+
+function formatCOP(value) {
   const number = Number(value || 0);
   return `$${number.toLocaleString("es-CO")}`;
-};
+}
 
 function mensajeProducto(producto) {
-  return `${CONFIG.mensajeBase} ${producto.nombre} por valor de ${formatCOP(producto.precio)}.`;
+  const config = getConfig();
+  return `${config.mensajeBase} ${producto.nombre} por valor de ${formatCOP(producto.precio)}.`;
 }
 
 function whatsappUrl(mensaje) {
-  const phone = CONFIG.whatsappNumber || "";
+  const config = getConfig();
+  const phone = config.whatsappNumber || "";
   return `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
 }
 
@@ -27,22 +42,24 @@ function normalizar(texto) {
 }
 
 function setBrandAssets() {
+  const config = getConfig();
   const logo = $("#brandLogo");
   const strip = $("#logosStrip");
   const topWhatsapp = $("#topWhatsapp");
+  const year = $("#year");
 
-  if (logo && CONFIG.logoUrl) logo.src = CONFIG.logoUrl;
-  if (strip && CONFIG.logosStripUrl) strip.src = CONFIG.logosStripUrl;
+  if (logo && config.logoUrl) logo.src = config.logoUrl;
+  if (strip && config.logosStripUrl) strip.src = config.logosStripUrl;
   if (topWhatsapp) {
     topWhatsapp.href = whatsappUrl("Hola, quiero información sobre los combos y promociones de CyberShop.");
   }
-
-  const year = $("#year");
   if (year) year.textContent = new Date().getFullYear();
 }
 
 function buildCategories() {
   const select = $("#categorySelect");
+  const productos = getProducts();
+
   if (!select) return;
 
   const categorias = [...new Set(productos.map((p) => p.categoria).filter(Boolean))]
@@ -81,15 +98,15 @@ function tarjetaProducto(producto) {
   if (producto.destacado) badges.push(`<span class="badge hot">Oferta</span>`);
   if (producto.stockLimitado) badges.push(`<span class="badge stock">Limitado</span>`);
 
-  const logo = producto.logo || "./logos/Netflix.png";
+  const logo = producto.logo || "./logo-cybershop.png";
   const mensaje = mensajeProducto(producto);
 
   card.innerHTML = `
     <div class="image-wrap">
-      <img 
+      <img
         class="product-logo-img"
-        src="${logo}" 
-        alt="${producto.nombre}" 
+        src="${logo}"
+        alt="${producto.nombre}"
         loading="lazy"
         onerror="this.onerror=null; this.src='./logo-cybershop.png';"
       >
@@ -120,6 +137,7 @@ function renderProductos() {
   const grid = $("#productsGrid");
   const offersGrid = $("#offersGrid");
   const offersSection = $("#offersSection");
+  const productos = getProducts();
 
   if (!grid || !offersGrid || !offersSection) return;
 
@@ -128,6 +146,12 @@ function renderProductos() {
 
   grid.innerHTML = "";
   offersGrid.innerHTML = "";
+
+  if (!productos.length) {
+    grid.innerHTML = `<p class="empty">No se cargó la lista de productos. Revisa productos.js.</p>`;
+    offersSection.style.display = "none";
+    return;
+  }
 
   if (normales.length === 0) {
     grid.innerHTML = `<p class="empty">No encontramos productos con ese filtro.</p>`;

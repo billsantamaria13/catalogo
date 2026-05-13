@@ -1,23 +1,14 @@
 /*
   CYBERSHOP - PRODUCTOS Y CONFIGURACIÓN
 
-  IMPORTANTE:
-  1) Cambia whatsappNumber por tu número con indicativo de país, sin + ni espacios.
-     Ejemplo Colombia: "573001112233"
-
-  2) El logo principal debe estar en la raíz con este nombre:
-     logo-cybershop.png
-
-  3) La imagen grande de logos debe estar en la raíz con este nombre:
-     logos-cybershop-transparente.png
-
-  4) Los logos individuales deben estar dentro de la carpeta:
-     /logos/
-
-  5) Para cambiar precios, modifica únicamente el valor "precio".
+  Cambia únicamente:
+  - whatsappNumber
+  - precios
+  - nombres
+  - rutas de logos si algún archivo tiene otro nombre
 */
 
-const CONFIG = {
+window.CONFIG = {
   tienda: "CyberShop",
   whatsappNumber: "57TU_NUMERO_AQUI",
   logoUrl: "logo-cybershop.png",
@@ -25,7 +16,7 @@ const CONFIG = {
   mensajeBase: "Hola estoy interesado en",
 };
 
-const productos = [
+window.productos = [
   {
     nombre: "Netflix",
     categoria: "Streaming",
@@ -229,7 +220,7 @@ const productos = [
     categoria: "IA",
     precio: 30000,
     precioAnterior: 40000,
-    logo: "./logos/Perplexity.png",
+    logo: "./logos/GPT.png",
     destacado: true,
     stockLimitado: false,
   },
@@ -243,7 +234,6 @@ const productos = [
     stockLimitado: false,
   },
 
-  // OFERTAS
   {
     nombre: "IPTV Canales Deportivos 3 Meses",
     categoria: "Ofertas",
