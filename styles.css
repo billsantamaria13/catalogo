@@ -240,6 +240,25 @@ h1 {
   from { transform: translateY(0); filter: drop-shadow(0 0 14px rgba(0,234,255,.28)); }
   to { transform: translateY(-3px); filter: drop-shadow(0 0 24px rgba(0,234,255,.46)) drop-shadow(0 0 36px rgba(17,120,255,.28)); }
 }
+.image-wrap {
+  height: 78px;
+  display: grid;
+  place-items: center;
+  padding: 10px 10px 0;
+  background: radial-gradient(circle at center, rgba(0, 217, 255, 0.12), transparent 65%);
+}
+
+.image-wrap .product-logo-img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  border-radius: 15px;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.45));
+}
+
+.product-card {
+  min-height: 185px;
+}
 
 .controls-panel {
   display: flex;
