@@ -5,6 +5,7 @@ const emptyState = document.querySelector("#emptyState");
 const topWhatsapp = document.querySelector("#topWhatsapp");
 const floatingWhatsapp = document.querySelector("#floatingWhatsapp");
 const brandLogo = document.querySelector("#brandLogo");
+const logosStrip = document.querySelector("#logosStrip");
 
 let categoriaActiva = "Todos";
 
@@ -102,6 +103,11 @@ function iniciar() {
   document.title = `${CONFIG.tienda} | Ofertas`;
   brandLogo.src = CONFIG.logoUrl || "logo-cybershop.png";
   brandLogo.onerror = () => { brandLogo.style.display = "none"; };
+
+  if (logosStrip) {
+    logosStrip.src = CONFIG.logosStripUrl || "logos-cybershop-transparente.png";
+    logosStrip.onerror = () => { logosStrip.style.display = "none"; };
+  }
 
   const ayudaUrl = whatsappUrl(CONFIG.mensajeAyuda);
   topWhatsapp.href = ayudaUrl;

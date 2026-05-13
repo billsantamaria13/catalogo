@@ -9,8 +9,9 @@
 
 const CONFIG = {
   tienda: "CyberShop",
-  whatsappNumber: "573505267000",
+  whatsappNumber: "57TU_NUMERO_AQUI",
   logoUrl: "logo-cybershop.png", // Puedes cambiarlo por una URL RAW de GitHub.
+  logosStripUrl: "logos-cybershop-transparente.png", // Imagen grande de logos que aparece arriba del catálogo.
   mensajeAyuda: "Hola estoy interesado en conocer las ofertas de CyberShop.",
 };
 
