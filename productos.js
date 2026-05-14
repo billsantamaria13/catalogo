@@ -10,7 +10,7 @@
 
 window.CONFIG = {
   tienda: "CyberShop",
-  whatsappNumber: "573505267000",
+  whatsappNumber: "57TU_NUMERO_AQUI",
   logoUrl: "logo-cybershop.png",
   logosStripUrl: "logos-cybershop-transparente.png",
   mensajeBase: "Hola estoy interesado en comprar este combo:",
@@ -28,21 +28,29 @@ window.productos = [
   { nombre: "Paramount", categoria: "Streaming", precio: 9000, precioCombo: 7000, precioAnterior: 14000, logo: "./logos/Paramount.png", destacado: true },
   { nombre: "Vix", categoria: "Streaming", precio: 8000, precioCombo: 6000, precioAnterior: 12000, logo: "./logos/Vix.png", destacado: true },
   { nombre: "Apple TV", categoria: "Streaming", precio: 12000, precioCombo: 10000, precioAnterior: 18000, logo: "./logos/Apple.png", destacado: true },
+
   { nombre: "Spotify 1 Mes", categoria: "Música", precio: 12000, precioCombo: 10000, precioAnterior: 18000, logo: "./logos/Spotify.png", destacado: true },
   { nombre: "Spotify 3 Meses", categoria: "Música", precio: 33000, precioCombo: 28000, precioAnterior: 45000, logo: "./logos/Spotify.png", destacado: true },
+
   { nombre: "Youtube 1 Mes", categoria: "Streaming", precio: 12000, precioCombo: 10000, precioAnterior: 18000, logo: "./logos/Youtube.png", destacado: true },
   { nombre: "Youtube 3 Meses", categoria: "Streaming", precio: 33000, precioCombo: 28000, precioAnterior: 45000, logo: "./logos/Youtube.png", destacado: true },
+
   { nombre: "Canva Pro 1 Mes", categoria: "Diseño", precio: 10000, precioCombo: 8000, precioAnterior: 15000, logo: "./logos/Canva.png", destacado: true },
   { nombre: "Canva Pro 3 Meses", categoria: "Diseño", precio: 25000, precioCombo: 8000, precioAnterior: 35000, logo: "./logos/Canva.png", destacado: true },
+
   { nombre: "CapCut Pro 1 Mes", categoria: "Diseño", precio: 25000, precioCombo: 20000, precioAnterior: 35000, logo: "./logos/Capcut.png", destacado: true },
+
   { nombre: "Office 365 1 Mes", categoria: "Productividad", precio: 10000, precioCombo: 8000, precioAnterior: 15000, logo: "./logos/Office.png", destacado: true },
   { nombre: "Office 365 12 Meses", categoria: "Productividad", precio: 99000, precioCombo: 80000, precioAnterior: 130000, logo: "./logos/Office.png", destacado: true },
+
   { nombre: "Xbox Game Pass Ultimate 1 Mes", categoria: "Gaming", precio: 35000, precioCombo: 30000, precioAnterior: 45000, logo: "./logos/Xbox.png", destacado: true },
+
   { nombre: "Chat GPT Plus 1 Mes", categoria: "IA", precio: 35000, precioCombo: 30000, precioAnterior: 45000, logo: "./logos/GPT.png", destacado: true },
   { nombre: "Chat GPT Plus 3 Meses", categoria: "IA", precio: 90000, precioCombo: 30000, precioAnterior: 120000, logo: "./logos/GPT.png", destacado: true },
   { nombre: "Perplexity AI Pro 1 Mes", categoria: "IA", precio: 30000, precioCombo: 25000, precioAnterior: 40000, logo: "./logos/GPT.png", destacado: true },
   { nombre: "Gemini AI Pro con VEO 1 Mes", categoria: "IA", precio: 40000, precioCombo: 30000, precioAnterior: 55000, logo: "./logos/Gemini.png", destacado: true },
 
+  // OFERTAS
   { nombre: "IPTV Canales Deportivos 3 Meses", categoria: "Ofertas", precio: 30000, precioCombo: 30000, precioAnterior: 45000, logo: "./logos/IPTV.png", destacado: true, stockLimitado: true },
   { nombre: "Spotify 4 Meses", categoria: "Ofertas", precio: 40000, precioCombo: 40000, precioAnterior: 55000, logo: "./logos/Spotify.png", destacado: true, stockLimitado: true },
   { nombre: "Xbox Game Pass Ultimate 2 Meses", categoria: "Ofertas", precio: 55000, precioCombo: 55000, precioAnterior: 70000, logo: "./logos/Xbox.png", destacado: true, stockLimitado: true },
