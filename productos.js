@@ -17,7 +17,7 @@ window.CONFIG = {
 };
 
 window.productos = [
-  { nombre: "Netflix", categoria: "Streaming", precio: 15000, precioCombo: 12000, precioAnterior: 20000, logo: "./logos/Netflix.png", destacado: true },
+  { nombre: "Netflix", categoria: "Streaming", precio: 15000, precioCombo: 13000, precioAnterior: 20000, logo: "./logos/Netflix.png", destacado: true },
   { nombre: "Netflix Privado", categoria: "Streaming", precio: 21900, precioCombo: 20900, precioAnterior: 28000, logo: "./logos/Netflix.png", destacado: true },
   { nombre: "Disney + Star ESPN", categoria: "Streaming", precio: 14000, precioCombo: 12000, precioAnterior: 20000, logo: "./logos/Disney.png", destacado: true },
   { nombre: "Amazon Prime Video", categoria: "Streaming", precio: 8000, precioCombo: 6000, precioAnterior: 12000, logo: "./logos/Amazon.png", destacado: true },
