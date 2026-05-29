@@ -70,18 +70,19 @@ function emojiProducto(nombre) {
   if (texto.includes("disney")) return "🟣";
   if (texto.includes("amazon")) return "🔵";
   if (texto.includes("hbo") || texto.includes("max")) return "⚫";
-  if (texto.includes("iptv")) return "🉐";
+  if (texto.includes("iptv")) return "📺";
   if (texto.includes("plex")) return "🟡";
   if (texto.includes("crunchy")) return "🟠";
-  if (texto.includes("paramount")) return "🔵";
-  if (texto.includes("vix")) return "🟠";
-  if (texto.includes("apple")) return "⚪";
+  if (texto.includes("paramount")) return "🔷";
+  if (texto.includes("vix")) return "🟧";
+  if (texto.includes("apple")) return "🍎";
   if (texto.includes("spotify")) return "🟢";
-  if (texto.includes("youtube")) return "⭕";
-  if (texto.includes("canva")) return "🟡";
+  if (texto.includes("youtube")) return "🔴";
+  if (texto.includes("canva")) return "🎨";
   if (texto.includes("xbox")) return "🎮";
-  if (texto.includes("capcut")) return "🟣";
-  if (texto.includes("office")) return "🟠";
+  if (texto.includes("capcut")) return "✂️";
+  if (texto.includes("office")) return "📘";
+
   if (
     texto.includes("chat") ||
     texto.includes("gpt") ||
