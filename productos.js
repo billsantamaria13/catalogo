@@ -21,7 +21,7 @@ window.productos = [
   { nombre: "Netflix Privado", categoria: "Streaming", precio: 21900, precioCombo: 20900, precioAnterior: 28000, logo: "./logos/Netflix.png", destacado: true },
   { nombre: "Disney + Star ESPN", categoria: "Streaming", precio: 14000, precioCombo: 12000, precioAnterior: 20000, logo: "./logos/Disney.png", destacado: true },
   { nombre: "Amazon Prime Video", categoria: "Streaming", precio: 8000, precioCombo: 6000, precioAnterior: 12000, logo: "./logos/Amazon.png", destacado: true },
-  { nombre: "HBO MAX", categoria: "Streaming", precio: 9000, precioCombo: 8000, precioAnterior: 15000, logo: "./logos/HBO.png", destacado: true },
+  { nombre: "HBO MAX", categoria: "Streaming", precio: 10000, precioCombo: 9000, precioAnterior: 15000, logo: "./logos/HBO.png", destacado: true },
   { nombre: "IPTV Win+ 3000 Canales", categoria: "IPTV", precio: 15000, precioCombo: 12000, precioAnterior: 22000, logo: "./logos/IPTV.png", destacado: true },
   { nombre: "Plex", categoria: "Streaming", precio: 15000, precioCombo: 12000, precioAnterior: 20000, logo: "./logos/Plex.png", destacado: true },
   { nombre: "Crunchyroll", categoria: "Streaming", precio: 9000, precioCombo: 7000, precioAnterior: 14000, logo: "./logos/Crunchyr.png", destacado: true },
