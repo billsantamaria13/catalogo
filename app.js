@@ -42,6 +42,12 @@ function isComboActivo() {
 }
 
 function precioAplicado(producto) {
+
+  // Las ofertas nunca reciben descuento extra
+  if (producto.esOferta) {
+    return Number(producto.precio);
+  }
+
   return isComboActivo() && producto.precioCombo
     ? Number(producto.precioCombo)
     : Number(producto.precio);
