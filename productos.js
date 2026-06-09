@@ -1,6 +1,6 @@
 window.CONFIG = {
   tienda: "CyberShop",
-  whatsappNumber: "57350267000", // CAMBIA POR TU NUMERO
+  whatsappNumber: "573505267000", // CAMBIA POR TU NUMERO
   logoUrl: "logo-cybershop.png",
   logosStripUrl: "logos-cybershop-transparente.png",
   mensajeBase: "Hola estoy interesado en comprar:",
