@@ -237,8 +237,8 @@ window.productos = [
   {
     nombre: "Paramount",
     categoria: "Streaming",
-    precio: 14000,
-    precioCombo: 12000,
+    precio: 18000,
+    precioCombo: 16000,
     logo: "./logos/Paramount.png"
   },
 
