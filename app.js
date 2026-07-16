@@ -390,7 +390,10 @@ function renderCart() {
   }
 
   if (cartSubtotal) cartSubtotal.textContent = formatCOP(cartSubtotalNormal());
-  if (cartDiscount) cartDiscount.textContent = `-${formatCOP(cartDescuento())}`;
+  if (cartDiscount) {
+    const descuento = cartDescuento();
+    cartDiscount.textContent = descuento > 0 ? `-${formatCOP(descuento)}` : `$0`;
+  }
   if (cartTotal) cartTotal.textContent = formatCOP(cartTotalAplicado());
 
   if (cartWhatsapp) {
