@@ -3,13 +3,13 @@ window.CONFIG = {
   whatsappNumber: "573505267000", // CAMBIA POR TU NUMERO
   logoUrl: "logo-cybershop.png",
   logosStripUrl: "logos-cybershop-transparente.png",
-  mensajeBase: "Hola estoy interesado en comprar:",
+  mensajeBase: "Hola estoy interesado en comprar este combo:",
 };
 
 window.productos = [
 
   // ==========================
-  // 🔥 OFERTAS ESPECIALES
+  // 🏷️ OFERTAS ESPECIALES
   // ==========================
 
   {
@@ -26,20 +26,9 @@ window.productos = [
   {
     nombre: "Spotify 3 Meses",
     categoria: "Ofertas",
-    precio: 30000,
-    precioCombo: 30000,
-    precioAnterior: 33000,
-    logo: "./logos/Spotify.png",
-    destacado: true,
-    esOferta: true
-  },
-
-  {
-    nombre: "Spotify 4 Meses",
-    categoria: "Ofertas",
-    precio: 40000,
-    precioCombo: 40000,
-    precioAnterior: 48000,
+    precio: 35000,
+    precioCombo: 35000,
+    precioAnterior: 38000,
     logo: "./logos/Spotify.png",
     destacado: true,
     esOferta: true
@@ -48,9 +37,9 @@ window.productos = [
   {
     nombre: "Youtube 3 Meses",
     categoria: "Ofertas",
-    precio: 30000,
-    precioCombo: 30000,
-    precioAnterior: 33000,
+    precio: 35000,
+    precioCombo: 35000,
+    precioAnterior: 38000,
     logo: "./logos/Youtube.png",
     destacado: true,
     esOferta: true
@@ -145,17 +134,6 @@ window.productos = [
   },
 
   {
-    nombre: "Crunchyroll 3 Meses",
-    categoria: "Ofertas",
-    precio: 20000,
-    precioCombo: 20000,
-    precioAnterior: 27000,
-    logo: "./logos/Crunchyr.png",
-    destacado: true,
-    esOferta: true
-  },
-
-  {
     nombre: "Vix 3 Meses",
     categoria: "Ofertas",
     precio: 15000,
@@ -167,7 +145,7 @@ window.productos = [
   },
 
   // ==========================
-  // 📦 CATÁLOGO GENERAL
+  // 🎬 CATÁLOGO GENERAL
   // ==========================
 
   {
@@ -197,16 +175,16 @@ window.productos = [
   {
     nombre: "Amazon Prime Video",
     categoria: "Streaming",
-    precio: 8000,
-    precioCombo: 6000,
+    precio: 9000,
+    precioCombo: 7000,
     logo: "./logos/Amazon.png"
   },
 
   {
     nombre: "HBO MAX",
     categoria: "Streaming",
-    precio: 9000,
-    precioCombo: 8000,
+    precio: 10000,
+    precioCombo: 9000,
     logo: "./logos/HBO.png"
   },
 

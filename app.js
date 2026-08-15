@@ -8,10 +8,10 @@ const $ = (selector) => document.querySelector(selector);
 
 function getConfig() {
   return window.CONFIG || {
-    whatsappNumber: "",
+    whatsappNumber: "573505267000",
     logoUrl: "logo-cybershop.png",
     logosStripUrl: "logos-cybershop-transparente.png",
-    mensajeBase: "Hola estoy interesado en comprar este combo:",
+    mensajeBase: "Hola, estoy interesado en comprar este combo:",
   };
 }
 
@@ -42,7 +42,6 @@ function isComboActivo() {
 }
 
 function precioAplicado(producto) {
-
   // Las ofertas nunca reciben descuento extra
   if (producto.esOferta) {
     return Number(producto.precio);
@@ -72,33 +71,34 @@ function productoEnCarrito(producto) {
 function emojiProducto(nombre) {
   const texto = normalizar(nombre);
 
-  if (texto.includes("netflix")) return "🔴";
-  if (texto.includes("disney")) return "🟣";
-  if (texto.includes("amazon")) return "🔵";
-  if (texto.includes("hbo") || texto.includes("max")) return "⚫";
+  if (texto.includes("netflix")) return "🎬";
+  if (texto.includes("disney")) return "✨";
+  if (texto.includes("amazon") || texto.includes("prime")) return "📦";
+  if (texto.includes("hbo") || texto.includes("max")) return "💜";
   if (texto.includes("iptv")) return "📺";
-  if (texto.includes("plex")) return "🟡";
-  if (texto.includes("crunchy")) return "🟠";
-  if (texto.includes("paramount")) return "🔷";
-  if (texto.includes("vix")) return "🟧";
-  if (texto.includes("apple")) return "🍎";
-  if (texto.includes("spotify")) return "🟢";
-  if (texto.includes("youtube")) return "🔴";
+  if (texto.includes("plex")) return "🍿";
+  if (texto.includes("crunchy")) return "🍥";
+  if (texto.includes("paramount")) return "⛰️";
+  if (texto.includes("vix")) return "🔥";
+  if (texto.includes("apple")) return "🍏";
+  if (texto.includes("spotify")) return "🎧";
+  if (texto.includes("youtube")) return "▶️";
   if (texto.includes("canva")) return "🎨";
   if (texto.includes("xbox")) return "🎮";
   if (texto.includes("capcut")) return "✂️";
-  if (texto.includes("office")) return "📘";
+  if (texto.includes("office")) return "💼";
 
   if (
     texto.includes("chat") ||
     texto.includes("gpt") ||
     texto.includes("perplexity") ||
-    texto.includes("gemini")
+    texto.includes("gemini") ||
+    texto.includes("ia")
   ) {
     return "🤖";
   }
 
-  return "✨";
+  return "⚡";
 }
 
 function setBrandAssets() {
@@ -122,42 +122,74 @@ function setBrandAssets() {
 
 function buildCategories() {
   const select = $("#categorySelect");
+  const pills = $("#categoryPills");
   const productos = getProducts();
 
-  if (!select) return;
+  const setCategorias = new Set(productos.map((item) => item.categoria).filter(Boolean));
+  const categorias = ["Todos", ...Array.from(setCategorias)];
 
-  const categorias = [...new Set(productos.map((p) => p.categoria).filter(Boolean))]
-    .filter((cat) => cat !== "Ofertas")
-    .sort((a, b) => a.localeCompare(b, "es"));
+  if (select) {
+    select.innerHTML = categorias
+      .map((cat) => `<option value="${cat}">${cat}</option>`)
+      .join("");
+  }
 
-  select.innerHTML =
-    `<option value="Todos">Todos</option>` +
-    categorias.map((cat) => `<option value="${cat}">${cat}</option>`).join("");
+  if (pills) {
+    pills.innerHTML = categorias
+      .map(
+        (cat) => `
+        <button
+          class="cat-pill ${cat === state.category ? "active" : ""}"
+          type="button"
+          data-cat="${cat}"
+        >
+          ${cat}
+        </button>
+      `
+      )
+      .join("");
+
+    pills.querySelectorAll(".cat-pill").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        state.category = pill.dataset.cat;
+        if (select) select.value = state.category;
+        updatePillsUI();
+        renderProductos();
+      });
+    });
+  }
 }
 
-function filtrarProductos(lista, incluirOfertas = false) {
-  const query = normalizar(state.search);
+function updatePillsUI() {
+  document.querySelectorAll(".cat-pill").forEach((pill) => {
+    pill.classList.toggle("active", pill.dataset.cat === state.category);
+  });
+}
 
-  return lista.filter((producto) => {
-    const esOferta = producto.categoria === "Ofertas";
+function filtrarProductos(productos, soloOfertas = false) {
+  const q = normalizar(state.search);
 
-    if (incluirOfertas !== esOferta) return false;
+  return productos.filter((item) => {
+    const matchOferta = soloOfertas ? Boolean(item.esOferta) : !item.esOferta;
+    const matchCat =
+      state.category === "Todos"
+        ? true
+        : state.category === "Ofertas"
+        ? Boolean(item.esOferta)
+        : item.categoria === state.category;
 
-    const coincideCategoria =
-      state.category === "Todos" ||
-      producto.categoria === state.category ||
-      (state.category === "Ofertas" && esOferta);
+    const matchSearch =
+      !q ||
+      normalizar(item.nombre).includes(q) ||
+      normalizar(item.categoria).includes(q);
 
-    const texto = normalizar(`${producto.nombre} ${producto.categoria}`);
-    const coincideBusqueda = !query || texto.includes(query);
-
-    return coincideCategoria && coincideBusqueda;
+    return matchOferta && matchCat && matchSearch;
   });
 }
 
 function tarjetaProducto(producto) {
   const card = document.createElement("article");
-  card.className = "product-card";
+  card.className = `product-card ${producto.destacado ? "featured" : ""}`;
 
   const badges = [];
 
@@ -326,8 +358,8 @@ function buildWhatsappMessage() {
 
 ${lineas.join("\n")}
 
-💵 Subtotal normal: ${formatCOP(subtotal)}
-🎁 Descuento aplicado: ${formatCOP(descuento)}
+💳 Subtotal normal: ${formatCOP(subtotal)}
+🏷️ Descuento aplicado: ${formatCOP(descuento)}
 💰 Total a pagar: ${formatCOP(total)}`;
 }
 
@@ -344,8 +376,8 @@ function renderCart() {
 
   if (cartMode) {
     cartMode.textContent = isComboActivo()
-      ? "Precio combo activado por 2 o más productos"
-      : "Agrega otro producto para activar precio combo";
+      ? "🔥 Precio combo activado por 2 o más productos"
+      : "💡 Agrega otro producto para activar precio combo";
   }
 
   if (cartItems) {
@@ -379,8 +411,9 @@ function renderCart() {
                 type="button"
                 class="remove-cart-item"
                 data-remove="${item.nombre}"
+                title="Eliminar producto"
               >
-                ×
+                ✕
               </button>
             </div>
           `;
