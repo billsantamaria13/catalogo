@@ -42,11 +42,9 @@ function isComboActivo() {
 }
 
 function precioAplicado(producto) {
-  // Las ofertas nunca reciben descuento extra
   if (producto.esOferta) {
     return Number(producto.precio);
   }
-
   return isComboActivo() && producto.precioCombo
     ? Number(producto.precioCombo)
     : Number(producto.precio);
@@ -70,7 +68,6 @@ function productoEnCarrito(producto) {
 
 function emojiProducto(nombre) {
   const texto = normalizar(nombre);
-
   if (texto.includes("netflix")) return "🎬";
   if (texto.includes("disney")) return "✨";
   if (texto.includes("amazon") || texto.includes("prime")) return "📦";
@@ -80,14 +77,13 @@ function emojiProducto(nombre) {
   if (texto.includes("crunchy")) return "🍥";
   if (texto.includes("paramount")) return "⛰️";
   if (texto.includes("vix")) return "🔥";
-  if (texto.includes("apple")) return "🍏";
   if (texto.includes("spotify")) return "🎧";
   if (texto.includes("youtube")) return "▶️";
+  if (texto.includes("deezer")) return "🎵";
   if (texto.includes("canva")) return "🎨";
   if (texto.includes("xbox")) return "🎮";
   if (texto.includes("capcut")) return "✂️";
   if (texto.includes("office")) return "💼";
-
   if (
     texto.includes("chat") ||
     texto.includes("gpt") ||
@@ -97,7 +93,6 @@ function emojiProducto(nombre) {
   ) {
     return "🤖";
   }
-
   return "⚡";
 }
 
@@ -107,16 +102,13 @@ function setBrandAssets() {
   const strip = $("#logosStrip");
   const topWhatsapp = $("#topWhatsapp");
   const year = $("#year");
-
   if (logo && config.logoUrl) logo.src = config.logoUrl;
   if (strip && config.logosStripUrl) strip.src = config.logosStripUrl;
-
   if (topWhatsapp) {
     topWhatsapp.href = whatsappUrl(
       "👋 Hola, quiero información sobre los combos y promociones de CyberShop."
     );
   }
-
   if (year) year.textContent = new Date().getFullYear();
 }
 
@@ -124,16 +116,13 @@ function buildCategories() {
   const select = $("#categorySelect");
   const pills = $("#categoryPills");
   const productos = getProducts();
-
   const setCategorias = new Set(productos.map((item) => item.categoria).filter(Boolean));
   const categorias = ["Todos", ...Array.from(setCategorias)];
-
   if (select) {
     select.innerHTML = categorias
       .map((cat) => `<option value="${cat}">${cat}</option>`)
       .join("");
   }
-
   if (pills) {
     pills.innerHTML = categorias
       .map(
@@ -148,7 +137,6 @@ function buildCategories() {
       `
       )
       .join("");
-
     pills.querySelectorAll(".cat-pill").forEach((pill) => {
       pill.addEventListener("click", () => {
         state.category = pill.dataset.cat;
@@ -166,24 +154,16 @@ function updatePillsUI() {
   });
 }
 
-function filtrarProductos(productos, soloOfertas = false) {
+function filtrarProductos(productos) {
   const q = normalizar(state.search);
-
   return productos.filter((item) => {
-    const matchOferta = soloOfertas ? Boolean(item.esOferta) : !item.esOferta;
     const matchCat =
-      state.category === "Todos"
-        ? true
-        : state.category === "Ofertas"
-        ? Boolean(item.esOferta)
-        : item.categoria === state.category;
-
+      state.category === "Todos" || item.categoria === state.category;
     const matchSearch =
       !q ||
       normalizar(item.nombre).includes(q) ||
       normalizar(item.categoria).includes(q);
-
-    return matchOferta && matchCat && matchSearch;
+    return matchCat && matchSearch;
   });
 }
 
@@ -192,16 +172,13 @@ function tarjetaProducto(producto) {
   card.className = `product-card ${producto.destacado ? "featured" : ""}`;
 
   const badges = [];
-
   if (producto.destacado) {
     badges.push(`<span class="badge hot">Oferta</span>`);
   }
-
   if (producto.stockLimitado) {
     badges.push(`<span class="badge stock">Limitado</span>`);
   }
-
-  if (producto.precioCombo && producto.precioCombo < producto.precio) {
+  if (producto.precioCombo && producto.precioCombo < producto.precio && !producto.esOferta) {
     badges.push(`<span class="badge combo">Combo</span>`);
   }
 
@@ -225,7 +202,7 @@ function tarjetaProducto(producto) {
       <h3>${producto.nombre}</h3>
 
       <div class="price-row">
-        <div>
+        <div class="price-info">
           ${
             producto.precioAnterior
               ? `<small class="before">Antes ${formatCOP(producto.precioAnterior)}</small>`
@@ -233,20 +210,19 @@ function tarjetaProducto(producto) {
           }
           <strong>${formatCOP(producto.precio)}</strong>
           ${
-            producto.precioCombo && producto.precioCombo < producto.precio
+            producto.precioCombo && producto.precioCombo < producto.precio && !producto.esOferta
               ? `<small class="combo-price">Combo: ${formatCOP(producto.precioCombo)}</small>`
               : ""
           }
         </div>
+        <button
+          class="buy-btn add-cart-btn ${yaAgregado ? "is-added" : ""}"
+          type="button"
+          data-product="${producto.nombre}"
+        >
+          ${yaAgregado ? "✓ Agregado" : "Agregar"}
+        </button>
       </div>
-
-      <button
-        class="buy-btn add-cart-btn ${yaAgregado ? "is-added" : ""}"
-        type="button"
-        data-product="${producto.nombre}"
-      >
-        ${yaAgregado ? "Agregado" : "Agregar"}
-      </button>
     </div>
   `;
 
@@ -259,34 +235,24 @@ function renderProductos() {
   const offersSection = $("#offersSection");
   const productos = getProducts();
 
-  if (!grid || !offersGrid || !offersSection) return;
+  if (!grid) return;
 
-  const normales = filtrarProductos(productos, false);
-  const ofertas = filtrarProductos(productos, true);
+  const filtrados = filtrarProductos(productos);
 
   grid.innerHTML = "";
-  offersGrid.innerHTML = "";
+  if (offersGrid) offersGrid.innerHTML = "";
+  if (offersSection) offersSection.style.display = "none";
 
   if (!productos.length) {
     grid.innerHTML = `<p class="empty">No se cargó la lista de productos. Revisa productos.js.</p>`;
-    offersSection.style.display = "none";
     return;
   }
 
-  if (normales.length === 0) {
+  if (filtrados.length === 0) {
     grid.innerHTML = `<p class="empty">No encontramos productos con ese filtro.</p>`;
   } else {
-    normales.forEach((producto) => grid.appendChild(tarjetaProducto(producto)));
+    filtrados.forEach((producto) => grid.appendChild(tarjetaProducto(producto)));
   }
-
-  if (state.category !== "Todos" && state.category !== "Ofertas") {
-    offersSection.style.display = "none";
-    bindProductButtons();
-    return;
-  }
-
-  offersSection.style.display = ofertas.length ? "block" : "none";
-  ofertas.forEach((producto) => offersGrid.appendChild(tarjetaProducto(producto)));
 
   bindProductButtons();
 }
@@ -296,9 +262,7 @@ function bindProductButtons() {
     button.addEventListener("click", () => {
       const nombre = button.dataset.product;
       const producto = getProducts().find((item) => item.nombre === nombre);
-
       if (!producto) return;
-
       toggleCartProduct(producto);
     });
   });
@@ -306,16 +270,21 @@ function bindProductButtons() {
 
 function toggleCartProduct(producto) {
   const existe = productoEnCarrito(producto);
-
   if (existe) {
     state.cart = state.cart.filter((item) => item.nombre !== producto.nombre);
   } else {
     state.cart.push(producto);
+    // Pop animation on cart button
+    const cartFloat = $("#cartFloat");
+    if (cartFloat) {
+      cartFloat.classList.remove("pop");
+      void cartFloat.offsetWidth; // force reflow
+      cartFloat.classList.add("pop");
+    }
   }
-
   renderProductos();
   renderCart();
-  openCart();
+  // NOTE: Cart does NOT auto-open anymore. User clicks cart button to open.
 }
 
 function removeCartProduct(nombre) {
@@ -346,21 +315,13 @@ function buildWhatsappMessage() {
     const aplicado = precioAplicado(item);
     const ahorro = Math.max(normal - aplicado, 0);
     const emoji = emojiProducto(item.nombre);
-
     if (comboActivo && ahorro > 0) {
       return `${emoji} ${item.nombre}: ${formatCOP(aplicado)} (antes ${formatCOP(normal)})`;
     }
-
     return `${emoji} ${item.nombre}: ${formatCOP(aplicado)}`;
   });
 
-  return `👋 ${config.mensajeBase}
-
-${lineas.join("\n")}
-
-💳 Subtotal normal: ${formatCOP(subtotal)}
-🏷️ Descuento aplicado: ${formatCOP(descuento)}
-💰 Total a pagar: ${formatCOP(total)}`;
+  return `👋 ${config.mensajeBase}\n\n${lineas.join("\n")}\n\n💳 Subtotal normal: ${formatCOP(subtotal)}\n🏷️ Descuento aplicado: ${formatCOP(descuento)}\n💰 Total a pagar: ${formatCOP(total)}`;
 }
 
 function renderCart() {
@@ -389,7 +350,6 @@ function renderCart() {
           const aplicado = precioAplicado(item);
           const normal = Number(item.precio);
           const tieneDescuento = isComboActivo() && aplicado < normal;
-
           return `
             <div class="cart-item">
               <img
@@ -452,21 +412,19 @@ function closeCart() {
 function bindEvents() {
   const searchInput = $("#searchInput");
   const categorySelect = $("#categorySelect");
-
   if (searchInput) {
     searchInput.addEventListener("input", (event) => {
       state.search = event.target.value;
       renderProductos();
     });
   }
-
   if (categorySelect) {
     categorySelect.addEventListener("change", (event) => {
       state.category = event.target.value;
+      updatePillsUI();
       renderProductos();
     });
   }
-
   $("#cartFloat")?.addEventListener("click", openCart);
   $("#closeCart")?.addEventListener("click", closeCart);
   $("#cartOverlay")?.addEventListener("click", closeCart);
