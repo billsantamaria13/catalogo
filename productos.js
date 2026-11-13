@@ -124,6 +124,17 @@ window.productos = [
   },
 
   {
+    nombre: "Crunchyroll 3 Meses",
+    categoria: "Películas/Series",
+    precio: 24000,
+    precioCombo: 24000,
+    precioAnterior: 27000,
+    logo: "./logos/Crunchyr.png",
+    destacado: true,
+    esOferta: true
+  },
+
+  {
     nombre: "Crunchyroll",
     categoria: "Películas/Series",
     precio: 9000,
@@ -298,7 +309,7 @@ window.productos = [
     precio: 90000,
     precioCombo: 90000,
     precioAnterior: 120000,
-    logo: "./logos/Office.png",
+    logo: "./logos/office.png",
     destacado: true,
     esOferta: true
   },
@@ -308,7 +319,7 @@ window.productos = [
     categoria: "Herramientas",
     precio: 12000,
     precioCombo: 10000,
-    logo: "./logos/Office.png"
+    logo: "./logos/office.png"
   },
 
   {
