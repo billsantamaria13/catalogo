@@ -81,14 +81,14 @@ body {
 .orb-one {
   top: 2%;
   left: -16%;
-  background: #005dff;
+  background: #e5173f;
   animation: floatOrbA 18s ease-in-out infinite alternate;
 }
 
 .orb-two {
   top: 10%;
   right: -14%;
-  background: #00e7ff;
+  background: #12e67b;
   animation: floatOrbB 21s ease-in-out infinite alternate;
 }
 
@@ -982,4 +982,68 @@ body {
   .cart-drawer.is-open {
     transform: translateY(0);
   }
+}
+/* ===== Navidad ===== */
+.snow {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10vh;
+  color: #fff;
+  opacity: 0.85;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+  animation: snowFall linear infinite, snowSway ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes snowFall {
+  to { top: 110vh; }
+}
+
+@keyframes snowSway {
+  from { transform: translateX(-18px); }
+  to { transform: translateX(18px); }
+}
+
+.xmas-lights {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+  z-index: 5;
+  border-top: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+.xmas-lights i {
+  width: 10px;
+  height: 14px;
+  margin-top: 2px;
+  border-radius: 50% 50% 55% 55%;
+  background: currentColor;
+  box-shadow: 0 0 12px 3px currentColor;
+  animation: bulbBlink 1.6s ease-in-out infinite alternate;
+}
+
+.xmas-lights i:nth-child(4n+1) { color: #ff2d55; animation-delay: 0s; }
+.xmas-lights i:nth-child(4n+2) { color: #12e67b; animation-delay: .4s; }
+.xmas-lights i:nth-child(4n+3) { color: #ffd23f; animation-delay: .8s; }
+.xmas-lights i:nth-child(4n)   { color: #26e6ff; animation-delay: 1.2s; }
+
+@keyframes bulbBlink {
+  from { opacity: 1; }
+  to { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snowflake, .xmas-lights i { animation: none; }
 }

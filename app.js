@@ -431,7 +431,32 @@ function bindEvents() {
   $("#clearCart")?.addEventListener("click", clearCart);
 }
 
+function buildChristmas() {
+  const snow = document.getElementById("snow");
+  if (snow) {
+    const n = window.innerWidth < 600 ? 28 : 55;
+    const chars = ["❄", "❅", "❆", "•"];
+    for (let i = 0; i < n; i++) {
+      const f = document.createElement("span");
+      f.className = "snowflake";
+      f.textContent = chars[i % chars.length];
+      f.style.left = Math.random() * 100 + "vw";
+      f.style.fontSize = 8 + Math.random() * 14 + "px";
+      f.style.opacity = 0.4 + Math.random() * 0.5;
+      f.style.animationDuration = 9 + Math.random() * 12 + "s, " + (2 + Math.random() * 3) + "s";
+      f.style.animationDelay = -Math.random() * 15 + "s, " + -Math.random() * 3 + "s";
+      snow.appendChild(f);
+    }
+  }
+  const lights = document.getElementById("xmasLights");
+  if (lights) {
+    const count = Math.max(10, Math.floor(window.innerWidth / 48));
+    for (let i = 0; i < count; i++) lights.appendChild(document.createElement("i"));
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  buildChristmas();
   setBrandAssets();
   buildCategories();
   bindEvents();
